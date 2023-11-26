@@ -1,3 +1,5 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class Person implements Movable {
@@ -7,23 +9,23 @@ public class Person implements Movable {
     protected boolean isInfected;
     protected boolean hasSymptoms;
     protected double infectionDuration;
+    private Map<Person, Double> closeContactTimeMap = new HashMap<>();
 
-    // Constructor that create person with position 
     public Person(Vector2D position) {
         this.position = position;
         this.velocity = generateRandomVelocity();
 
-        this.isImmune = false; // Initially, no one is immune
-        this.isInfected = false; // Initially, no one is infectious
-        this.hasSymptoms = false; // Initially, no one has symptoms
-        this.infectionDuration = 0; // Duration of infection
+        this.isImmune = false;
+        this.isInfected = false; 
+        this.hasSymptoms = false; 
+        this.infectionDuration = 0;
     }
 
     public void infect(boolean withSymptoms) {
         if (!isImmune) {
             isInfected = true;
             hasSymptoms = withSymptoms;
-            infectionDuration = 20 + new Random().nextInt(11); // Infection lasts 20-30 seconds
+            infectionDuration = 20 + new Random().nextInt(11); 
         }
     }
 
@@ -32,25 +34,31 @@ public class Person implements Movable {
             infectionDuration -= 1.0 / 25;
             if (infectionDuration <= 0) {
                 isInfected = false;
-                isImmune = true; // Person becomes immune after infection
+                isImmune = true;
             }
         }
     }
 
-        // Method to check and infect based on proximity and infection status
+
         public void checkAndInfect(Person other) {
             if (this.isInfected && !other.isImmune && !other.isInfected) {
                 double distance = this.position.subtract(other.position).abs();
-                if (distance <= 2) { // If within 2 meters
-                    boolean infect = new Random().nextBoolean(); // 50% chance of infection from asymptomatic
-                    if (this.hasSymptoms || infect) {
-                        other.infect(this.hasSymptoms);
+                if (distance <= 2) { 
+                    closeContactTimeMap.putIfAbsent(other, 0.0);
+                    closeContactTimeMap.put(other, closeContactTimeMap.get(other) + 1.0 / 25);
+    
+                    if (closeContactTimeMap.get(other) >= 3 * 25) { 
+                        boolean infect = new Random().nextBoolean();
+                        if (this.hasSymptoms || infect) {
+                            other.infect(this.hasSymptoms);
+                        }
                     }
+                } else {
+                    closeContactTimeMap.remove(other);
                 }
             }
         }
 
-    // method that generates random velocity <cos * speed; sin * speed >
     private Vector2D generateRandomVelocity() {
         Random random = new Random();
         double angle = random.nextDouble() * 2 * Math.PI;
@@ -58,13 +66,18 @@ public class Person implements Movable {
         return new Vector2D(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
-    // method that updates position
+    public void setRandomVelocity() {
+        Random random = new Random();
+        double angle = random.nextDouble() * 2 * Math.PI;
+        double speed = random.nextDouble() * 2.5;
+        velocity = new Vector2D(Math.cos(angle) * speed, Math.sin(angle) * speed);
+    }
     @Override
     public void updatePosition() {
         this.position.add(this.velocity);
+        setRandomVelocity();
     }
 
-    //method that randomize velocity
     @Override
     public void randomizeVelocity() {
         this.velocity = generateRandomVelocity();

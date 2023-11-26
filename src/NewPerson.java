@@ -8,7 +8,6 @@ public class NewPerson extends Person {
         isInfected = rand.nextInt(100) < 10;
     }
 
-    // Method to generate a random position on the boundary of the simulation area
     private static Vector2D generateBoundaryPosition(int width, int height) {
         Random random = new Random();
         int side = random.nextInt(4);

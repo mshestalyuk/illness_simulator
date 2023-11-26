@@ -18,54 +18,54 @@ public class Simulation {
     // method for start our simulation that initialize from 1 to 51 random Persons
     private void initializeRandomMovables() {
         Random random = new Random();
-        int numberOfMovables = random.nextInt(50) + 1;
+        int numberOfMovables = random.nextInt(3000) + 1;
         for (int i = 0; i < numberOfMovables; i++) {
             movables.add(new Person(new Vector2D(random.nextInt(width), random.nextInt(height))));
         }
     }
 
     // Temporary method that displays the board
-    public void display_board() {
-        // Initialize the board
-        char[][] board = new char[width][height];
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                board[i][j] = '.';
-            }
-        }
+
     
-        // Place movables on the board
-        for (Movable m : movables) {
-            if (m instanceof Person) { // Check if the movable is a Person
-                Person p = (Person) m;
-                int x = (int) p.getPosition().getX();
-                int y = (int) p.getPosition().getY();
-                if (x >= 0 && x < width && y >= 0 && y < height) {
-                    if (p.isInfected) {
-                        if (p.hasSymptoms) {
-                            board[x][y] = '-'; // Infected with symptoms
-                        } else {
-                            board[x][y] = '+'; // Infected without symptoms
-                        }
-                    } else {
-                        board[x][y] = '*'; // Not infected or immune
-                    }
-                }
-            }
-        }
+    // public void display_board() {
+    //     // Initialize the board
+    //     char[][] board = new char[width][height];
+    //     for (int i = 0; i < width; i++) {
+    //         for (int j = 0; j < height; j++) {
+    //             board[i][j] = '.';
+    //         }
+    //     }
     
-        // Print the board
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                System.out.print(board[i][j]);
-            }
-            System.out.println();
-        }
-        System.out.println(getPopulationNum());
-    }
+    //     // Place movables on the board
+    //     for (Movable m : movables) {
+    //         if (m instanceof Person) { // Check if the movable is a Person
+    //             Person p = (Person) m;
+    //             int x = (int) p.getPosition().getX();
+    //             int y = (int) p.getPosition().getY();
+    //             if (x >= 0 && x < width && y >= 0 && y < height) {
+    //                 if (p.isInfected) {
+    //                     if (p.hasSymptoms) {
+    //                         board[x][y] = '-'; // Infected with symptoms
+    //                     } else {
+    //                         board[x][y] = '+'; // Infected without symptoms
+    //                     }
+    //                 } else {
+    //                     board[x][y] = '*'; // Not infected or immune
+    //                 }
+    //             }
+    //         }
+    //     }
+    
+    //     for (int i = 0; i < width; i++) {
+    //         for (int j = 0; j < height; j++) {
+    //             System.out.print(board[i][j]);
+    //         }
+    //         System.out.println();
+    //     }
+    //     System.out.println(getPopulationNum());
+    // }
     
 
-    // method that handles Boundary collision
     private boolean handleBoundaryCollision(Movable m) {
         if (m instanceof Person) {
             Person p = (Person) m;
@@ -77,21 +77,20 @@ public class Simulation {
     
             if (atBoundaryX || atBoundaryY) {
                 if (shouldReflect()) {
-                    // Reflect the velocity vector
                     velocity.reflect(atBoundaryX, atBoundaryY);
-                    return false; // Do not remove
+                    return false; 
                 } else {
-                    return true; // Remove from simulation
+                    return true; 
                 }
             }
         }
-        return false; // Default return value, do not remove
+        return false; 
     }
     
 
     private boolean shouldReflect() {
         Random random = new Random();
-        return random.nextInt(2) == 0; // 50% chance
+        return random.nextInt(2) == 0; 
     }
 
     // 1 simulate step
@@ -102,9 +101,8 @@ public class Simulation {
             if (m instanceof Person) {
                 Person person = (Person) m;
                 person.updatePosition();
-                person.updateInfection(); // Update infection status
+                person.updateInfection(); 
 
-                // Check for infection spread
                 for (Movable other : movables) {
                     if (other instanceof Person && other != m) {
                         person.checkAndInfect((Person) other);
@@ -122,14 +120,11 @@ public class Simulation {
     }
 
     public void addNewPersons() {
-        // logic to determine when to add NewPerson
-        // e.g., based on a timer or a certain condition
         movables.add(new NewPerson(width, height));
     }
 
-    // Method to check and add new persons
     public void checkAndAddNewPersons() {
-            int populationThreshold = 20; // Set your desired population threshold
+            int populationThreshold = 1000; 
             if (movables.size() < populationThreshold) {
                 int numberOfNewPersons = populationThreshold - movables.size();
                 for (int i = 0; i < numberOfNewPersons; i++) {
@@ -138,9 +133,31 @@ public class Simulation {
         }
     }
 
-    // Method that returns num of population
     public Integer getPopulationNum() {
         return movables.size();
     }
-    // Additional methods for saving, loading, visualizing, etc.
+
+    public List<Movable> getMovables() {
+        return movables;
+    }
+
+    public int getNumInfected() {
+        int count = 0;
+        for (Movable m : movables) {
+            if (m instanceof Person && ((Person) m).isInfected) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getNumImmuned() {
+        int count = 0;
+        for (Movable m : movables) {
+            if (m instanceof Person && ((Person) m).isImmune) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
