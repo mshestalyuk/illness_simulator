@@ -48,10 +48,12 @@ public class Person implements Movable {
                     closeContactTimeMap.put(other, closeContactTimeMap.get(other) + 1.0 / 25);
     
                     if (closeContactTimeMap.get(other) >= 3 * 25) { 
-                        boolean infect = new Random().nextBoolean();
-                        if (this.hasSymptoms || infect) {
+                        boolean infectSymptoms = new Random().nextBoolean();
+                        if (infectSymptoms) {
                             other.infect(this.hasSymptoms);
                         }
+                        else
+                            other.infect(this.isInfected);
                     }
                 } else {
                     closeContactTimeMap.remove(other);

@@ -6,8 +6,22 @@ public class NewPerson extends Person {
         super(generateBoundaryPosition(width, height));
         Random rand = new Random(); 
         isInfected = rand.nextInt(100) < 10;
+        if (isInfected) {
+            hasSymptoms = new Random().nextBoolean(); 
+            infectionDuration = 20 + new Random().nextInt(11); 
+        }
     }
 
+    @Override
+    public void updateInfection() {
+        if (isInfected) {
+            infectionDuration -= 1.0 / 25;
+            if (infectionDuration <= 0) {
+                isInfected = false;
+                isImmune = true;
+            }
+        }
+    }
     private static Vector2D generateBoundaryPosition(int width, int height) {
         Random random = new Random();
         int side = random.nextInt(4);

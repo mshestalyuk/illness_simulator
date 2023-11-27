@@ -18,7 +18,7 @@ public class Simulation {
     // method for start our simulation that initialize from 1 to 51 random Persons
     private void initializeRandomMovables() {
         Random random = new Random();
-        int numberOfMovables = random.nextInt(3000) + 1;
+        int numberOfMovables = 1000;
         for (int i = 0; i < numberOfMovables; i++) {
             movables.add(new Person(new Vector2D(random.nextInt(width), random.nextInt(height))));
         }
@@ -98,13 +98,13 @@ public class Simulation {
         List<Movable> toRemove = new ArrayList<>();
 
         for (Movable m : movables) {
-            if (m instanceof Person) {
+            if (m instanceof Person || m instanceof NewPerson) {
                 Person person = (Person) m;
                 person.updatePosition();
                 person.updateInfection(); 
 
                 for (Movable other : movables) {
-                    if (other instanceof Person && other != m) {
+                    if (other instanceof Person || m instanceof NewPerson && other != m) {
                         person.checkAndInfect((Person) other);
                     }
                 }

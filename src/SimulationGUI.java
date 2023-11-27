@@ -52,7 +52,7 @@ public class SimulationGUI extends JFrame {
         controlPanel.add(immunedLabel);
         
 
-        timeLabel = new JLabel("Time: 0s");
+        timeLabel = new JLabel("Time: 0 s");
         controlPanel.add(timeLabel);
         
         add(simulationPanel, BorderLayout.CENTER);
@@ -65,12 +65,15 @@ public class SimulationGUI extends JFrame {
 
     private void startSimulation() {
         elapsedTime = 0;
-        timer = new Timer(1000 / 25, e -> {
-            simulation.simulateStep();
+        timer = new Timer(1000, e -> {
+            for(Integer i=0; i<25;i++ )
+            {
+                simulation.simulateStep();
+            }
             updateLabels();
             simulationPanel.repaint();
             elapsedTime++;
-            timeLabel.setText("Step: " + elapsedTime);
+            timeLabel.setText("Time: " + elapsedTime + "s");
         });
         timer.start();
     }
