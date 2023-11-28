@@ -18,7 +18,7 @@ public class Simulation {
     // method for start our simulation that initialize from 1 to 51 random Persons
     private void initializeRandomMovables() {
         Random random = new Random();
-        int numberOfMovables = 1000;
+        int numberOfMovables = 250;
         for (int i = 0; i < numberOfMovables; i++) {
             movables.add(new Person(new Vector2D(random.nextInt(width), random.nextInt(height))));
         }
@@ -124,7 +124,7 @@ public class Simulation {
     }
 
     public void checkAndAddNewPersons() {
-            int populationThreshold = 1000; 
+            int populationThreshold = 250; 
             if (movables.size() < populationThreshold) {
                 int numberOfNewPersons = populationThreshold - movables.size();
                 for (int i = 0; i < numberOfNewPersons; i++) {

@@ -65,7 +65,7 @@ public class SimulationGUI extends JFrame {
 
     private void startSimulation() {
         elapsedTime = 0;
-        timer = new Timer(1000, e -> {
+        timer = new Timer(150, e -> {
             for(Integer i=0; i<25;i++ )
             {
                 simulation.simulateStep();

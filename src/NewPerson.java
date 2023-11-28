@@ -5,7 +5,7 @@ public class NewPerson extends Person {
     public NewPerson(int width, int height) {
         super(generateBoundaryPosition(width, height));
         Random rand = new Random(); 
-        isInfected = rand.nextInt(100) < 10;
+        isInfected = rand.nextInt(100) < 25;
         if (isInfected) {
             hasSymptoms = new Random().nextBoolean(); 
             infectionDuration = 20 + new Random().nextInt(11); 

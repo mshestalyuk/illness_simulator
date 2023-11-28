@@ -45,7 +45,7 @@ public class Person implements Movable {
                 double distance = this.position.subtract(other.position).abs();
                 if (distance <= 2) { 
                     closeContactTimeMap.putIfAbsent(other, 0.0);
-                    closeContactTimeMap.put(other, closeContactTimeMap.get(other) + 1.0 / 25);
+                    closeContactTimeMap.put(other, closeContactTimeMap.get(other) + 25);
     
                     if (closeContactTimeMap.get(other) >= 3 * 25) { 
                         boolean infectSymptoms = new Random().nextBoolean();
@@ -71,7 +71,7 @@ public class Person implements Movable {
     public void setRandomVelocity() {
         Random random = new Random();
         double angle = random.nextDouble() * 2 * Math.PI;
-        double speed = random.nextDouble() * 2.5;
+        double speed = random.nextDouble() * 0.25;
         velocity = new Vector2D(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
     @Override
